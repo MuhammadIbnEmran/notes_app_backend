@@ -1,4 +1,5 @@
 package com.example.demo;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.*;
@@ -6,9 +7,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
+@CrossOrigin(origins = "*")
 @RestController
 public class NotesController {
+
+    @Value("${db_url}")
+    private String dbUrl;
+
+    @Value("${db_user}")
+    private String dbUser;
+
+    @Value("${db_pass}")
+    private String dbPass;
 
     @PostMapping("/add-note")
     public void insertNote(@RequestBody AddNoteRequest request) throws SQLException {
@@ -64,10 +74,10 @@ public class NotesController {
 
     public Connection getConnection() throws SQLException {
         Properties connectionProps = new Properties();
-        connectionProps.put("user", "root");
-        connectionProps.put("password", "318l3fTbook");
+        connectionProps.put("user", dbUser);
+        connectionProps.put("password", dbPass);
 
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/notes_app", connectionProps);
+        Connection conn = DriverManager.getConnection(dbUrl, connectionProps);
 
         System.out.println("Connected to database");
         return conn;
